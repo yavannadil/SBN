@@ -82,13 +82,13 @@
 
 #define SBN_MAIN_LOOP_DELAY           100 // milli-seconds
 #define SBN_TIMEOUT_CYCLES            2
-#define SBN_PEER_PIPE_DEPTH           64
+#define SBN_PEER_PIPE_DEPTH           10
 #define SBN_DEFAULT_MSG_LIM           8
 #define SBN_ITEMS_PER_FILE_LINE       6
 
-#define SBN_SUB_PIPE_DEPTH            256
-#define SBN_MAX_ONESUB_PKTS_ON_PIPE   256
-#define SBN_MAX_ALLSUBS_PKTS_ON_PIPE  64
+#define SBN_SUB_PIPE_DEPTH            10
+#define SBN_MAX_ONESUB_PKTS_ON_PIPE   10
+#define SBN_MAX_ALLSUBS_PKTS_ON_PIPE  10
 
 #define SBN_VOL_PEER_FILENAME         "/ram/apps/SbnPeerData.dat"
 #define SBN_NONVOL_PEER_FILENAME      "/cf/apps/SbnPeerData.dat"
