@@ -141,11 +141,11 @@ int32 SBN_InitPeerInterface(void)
     }/* end if */
  
     SBN.Peer[PeerIdx].ProtoRcvPort = SBN.FileData[LineNum].ProtoPort;
-    SBN.Peer[PeerIdx].ProtoSockId  = SBN_CreateSocket(SBN.Peer[PeerIdx].ProtoRcvPort);
+    /*SBN.Peer[PeerIdx].ProtoSockId  = SBN_CreateSocket(SBN.Peer[PeerIdx].ProtoRcvPort);
  
    if(SBN.Peer[PeerIdx].ProtoSockId == SBN_ERROR){
           return SBN_ERROR;
-    }/* end if */
+    }*/
      
     Stat = SBN_CreatePipe4Peer(PeerIdx);
     if(Stat == SBN_ERROR){
@@ -244,7 +244,7 @@ void SBN_ClearSocket(int SockID)
   bzero((char *) &s_addr, sizeof(s_addr));
    
   /* change to while loop */
-  for (i=0; i<=50; i++)
+  for (;;)
   {
     status = recvfrom(SockID, (char *)&SBN.DataMsgBuf, sizeof(SBN_NetPkt_t),
                            MSG_DONTWAIT,(struct sockaddr *) &s_addr, &addr_len);
@@ -297,7 +297,7 @@ int32 SBN_SendNetMsg(uint32 MsgType, uint32 MsgSize, uint32 PeerIdx, CFE_SB_Send
     case SBN_HEARTBEAT_MSG:
     case SBN_HEARTBEAT_ACK_MSG:
  
-      s_addr.sin_port = htons(SBN.ProtoXmtPort); /* dest port is always the same for each IP addr*/
+      s_addr.sin_port = htons(SBN.Peer[PeerIdx].ProtoRcvPort);
     
       ProtoMsgBuf.Hdr.Type = MsgType;
       strncpy(ProtoMsgBuf.Hdr.SrcCpuName,CFE_CPU_NAME,SBN_MAX_PEERNAME_LENGTH);
@@ -335,7 +335,7 @@ int32 SBN_CheckForNetProtoMsg(uint32 PeerIdx){
   bzero((char *) &s_addr, sizeof(s_addr));
   
   addr_len = sizeof(s_addr);
-  status = recvfrom(SBN.Peer[PeerIdx].ProtoSockId, (char *)&SBN.ProtoMsgBuf, 
+  status = recvfrom(SBN.ProtoSockId, (char *)&SBN.ProtoMsgBuf, 
                      sizeof(SBN_NetProtoMsg_t),MSG_DONTWAIT, 
                      (struct sockaddr *) &s_addr, &addr_len);
 
