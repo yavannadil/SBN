@@ -156,7 +156,7 @@ int32 SBN_Init(void)
     CFE_SB_Subscribe(SBN_SEND_HK_MID,SBN.CmdPipe);
 #endif
 
-    SBN.DebugOn = SBN_FALSE;
+    SBN.DebugOn = SBN_TRUE;
 
     CFE_EVS_SendEvent(SBN_INIT_EID, CFE_EVS_INFORMATION,
             "SBN APP Initialized V1.1, AppId=%d", SBN.AppId);
