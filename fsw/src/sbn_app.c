@@ -156,7 +156,7 @@ int32 SBN_Init(void)
     CFE_SB_Subscribe(SBN_SEND_HK_MID,SBN.CmdPipe);
 #endif
 
-    SBN.DebugOn = SBN_TRUE;
+    SBN.DebugOn = SBN_FALSE;
 
     CFE_EVS_SendEvent(SBN_INIT_EID, CFE_EVS_INFORMATION,
             "SBN APP Initialized V1.1, AppId=%d", SBN.AppId);
@@ -849,6 +849,18 @@ void SBN_ProcessUnsubFromPeer(uint32 PeerIdx)
 
 }/* SBN_ProcessUnsubFromPeer */
 
+
+typedef struct {
+   CFE_SB_TlmHdr_t      Hdr; /* 12 bytes */
+   uint32               Tlm32Param1;
+   uint16               Tlm16Param1;
+   uint16               Tlm16Param2;
+   uint8                Tlm8Param1;
+   uint8                Tlm8Param2;
+   uint8                Tlm8Param3;
+   uint8                Tlm8Param4;
+} SB_UT_Test_Tlm_t;
+
 void SBN_ProcessNetAppMsg(int MsgLength)
 {
     uint8 PeerIdx;
@@ -863,13 +875,26 @@ void SBN_ProcessNetAppMsg(int MsgLength)
     {
 
         case SBN_APP_MSG:
-            if (SBN.DebugOn == SBN_TRUE)
+            if (SBN_TRUE)
             {
+		SB_UT_Test_Tlm_t   TlmPkt;
+		CFE_SB_MsgPtr_t    TlmPktPtr = (CFE_SB_MsgPtr_t)&TlmPkt;
+		int32              ExpRtn,ActRtn;
+		
                 OS_printf("%s:Recvd AppMsg 0x%04x from %s,%d bytes\n",
                         CFE_CPU_NAME,
                         CFE_SB_GetMsgId(
                                 (CFE_SB_Msg_t *) &SBN.DataMsgBuf.Pkt.Data[0]),
                         SBN.DataMsgBuf.Hdr.SrcCpuName, MsgLength);
+
+		CFE_SB_InitMsg(&TlmPkt,0x0809,sizeof(SB_UT_Test_Tlm_t),TRUE);
+		ActRtn = CFE_SB_SendMsg(TlmPktPtr);
+		ExpRtn = CFE_SUCCESS;
+		if(ActRtn != ExpRtn){
+		    OS_printf("Unexpected return in SendMsg,exp=%lx,act=%lx\n",
+			    ExpRtn,ActRtn);
+		}
+		
             }/* end if */
 
             if (SBN.Peer[PeerIdx].State == SBN_HEARTBEATING)
