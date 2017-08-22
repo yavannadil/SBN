@@ -81,7 +81,7 @@
 #define SBN_NA_BUS                    (-1)
 
 #define SBN_MAIN_LOOP_DELAY           100 // milli-seconds
-#define SBN_TIMEOUT_CYCLES            2
+#define SBN_TIMEOUT_CYCLES            5
 #define SBN_PEER_PIPE_DEPTH           10
 #define SBN_DEFAULT_MSG_LIM           8
 #define SBN_ITEMS_PER_FILE_LINE       6
