@@ -880,7 +880,7 @@ void SBN_ProcessNetAppMsg(int MsgLength)
 		SB_UT_Test_Tlm_t   TlmPkt;
 		CFE_SB_MsgPtr_t    TlmPktPtr = (CFE_SB_MsgPtr_t)&TlmPkt;
 		int32              ExpRtn,ActRtn;
-		
+
                 OS_printf("%s:Recvd AppMsg 0x%04x from %s,%d bytes\n",
                         CFE_CPU_NAME,
                         CFE_SB_GetMsgId(
@@ -888,6 +888,13 @@ void SBN_ProcessNetAppMsg(int MsgLength)
                         SBN.DataMsgBuf.Hdr.SrcCpuName, MsgLength);
 
 		CFE_SB_InitMsg(&TlmPkt,0x0809,sizeof(SB_UT_Test_Tlm_t),TRUE);
+		TlmPkt.Tlm32Param1 = 42;
+		TlmPkt.Tlm16Param1 = 42;
+		TlmPkt.Tlm16Param2 = 42;
+		TlmPkt.Tlm8Param1 = 42;
+		TlmPkt.Tlm8Param2 = 42;
+		TlmPkt.Tlm8Param3 = 42;
+		TlmPkt.Tlm8Param4 = 42;
 		ActRtn = CFE_SB_SendMsg(TlmPktPtr);
 		ExpRtn = CFE_SUCCESS;
 		if(ActRtn != ExpRtn){
